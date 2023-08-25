@@ -1,0 +1,3 @@
+#Este es un archivo para ignorar archivos y no se suban 
+.env
+node_modules
