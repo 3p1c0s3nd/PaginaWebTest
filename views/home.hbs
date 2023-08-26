@@ -1,11 +1,5 @@
 <h1>Hola mundo desde el archivo home.hbs</h1>
 
-<article class="card mb-2">
-    <div class="card-body">
-        <p>www.google.com</p>
-        <p>cualquier cosa</p>
-        <a href="#" class="btn btn-danger">Eliminar</a>
-        <a href="#" class="btn btn-warning">Editar</a>
-        <a href="#" class="btn btn-info">Copiar</a>
-    </div>
-</article>
+{{#each urls }}
+  {{> Card item=this}}
+{{/each}}
