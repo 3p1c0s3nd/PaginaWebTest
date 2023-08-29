@@ -12,6 +12,11 @@ const urlSchema = new Schema({
         type: String,
         unique: true,
         required: true
+    },
+    user: {
+        type: Schema.Types.ObjectId,//esto lo administra mongodb
+        ref: 'User'
+
     }
 });
 

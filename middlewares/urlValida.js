@@ -5,13 +5,22 @@ const validarUrl = (req, res, next) => {
         const { origin } = req.body;
         const urlFrontend = new URL(origin);
         if(urlFrontend.origin != null){
-            return next();
+            if(urlFrontend.origin.startsWith("http://") || urlFrontend.origin.startsWith("https://")){
+                return next();
+            }else{
+                throw new Error("Url no valida");
+            }
         }else{
             throw new Error("Url no valida");
         }
     }catch(err){
-        console.log(err);
-        return res.send("URL no valida");
+        if(err == "Url no valida"){
+            req.flash("mensajes", [{msg: err}]);
+        }else{
+            req.flash("mensajes", [{msg: error.message}]);
+        }
+       
+        return res.redirect("/");
     }
    
 }

@@ -16,11 +16,15 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "connect-flash": "^0.1.1",
+    "csurf": "^1.11.0",
     "dotenv": "^10.0.0",
     "express": "^4.18.2",
     "express-handlebars": "^6.0.2",
     "express-session": "^1.17.3",
+    "express-validator": "^7.0.1",
     "mongoose": "^7.4.5",
-    "nanoid": "^3.3.6"
+    "nanoid": "^3.3.6",
+    "nodemailer": "^6.9.4",
+    "passport": "^0.6.0"
   }
 }

@@ -3,11 +3,11 @@ const { nanoid } = require('nanoid');
 
 const leerUrls = async(req, res) =>{
     try{
-        const urls = await Url.find().lean();
+        const urls = await Url.find({user: req.user.id}).lean();
         res.render("home", {urls: urls});
     }catch(err){
-        console.log(err);
-        res.send("Hubo un error");
+        req.flash("mensajes", [{msg: "Error al Leer las Urls"}]);
+        return res.redirect("/");
     }
 
 }
@@ -15,16 +15,17 @@ const leerUrls = async(req, res) =>{
 
 const agregarUrl = async(req, res) =>{
     
-    console.log(req.body);
+    //console.log(req.body);
     const { origin } = req.body;
 
     try{
-        const url = new Url({origin: origin, shortURL: nanoid(6)});
+        const url = new Url({origin: origin, shortURL: nanoid(6), user: req.user.id});
         await url.save();
+        req.flash("mensajes", [{msg: "Url Agregada"}]);
         res.redirect("/");
     }catch(err){
-        console.log(err);
-        res.send("Hubo un error");
+        req.flash("mensajes", [{msg: "Error al Agregar la Url"}]);
+        return res.redirect("/");
     }
 };
 
@@ -32,11 +33,17 @@ const agregarUrl = async(req, res) =>{
 const eliminarUrl = async(req, res) =>{
     const { id } = req.params;
     try{
-        await Url.findByIdAndDelete(id);
+        //await Url.findByIdAndDelete(id);
+        const url = await Url.findByIdAndDelete(id);//obtenemos la url que el usuario esta buscando
+        if(url.user.toString() !== req.user.id){
+            throw new Error("No tienes permisos para eliminar esta url");
+        }
+        await url.remove();
+        req.flash("mensajes", [{msg: "Url Eliminada"}]);
         res.redirect("/");
     }catch(err){
-        console.log(err);
-        res.send("Hubo un error");
+        req.flash("mensajes", [{msg: err.message}]);
+        return res.redirect("/");
     }
 }
 
@@ -44,11 +51,14 @@ const editarUrlForm = async(req, res) =>{
     const { id } = req.params;
     try {
         const url = await Url.findById(id).lean();
+        if(!url.user.equals(req.user.id)){
+            throw new Error("No tienes permisos para editar esta url");
+        }
         console.log(url);
         res.render("home", {url});
     } catch (error) {
-        console.log("Hubo un error");
-        res.send("Hubo un error al editar la url");
+        req.flash("mensajes", [{msg: error.message}]);
+        return res.redirect("/");
     }
    
 }
@@ -57,11 +67,18 @@ const editarUrl = async(req, res) =>{
     const { id } = req.params;
     const { origin } = req.body;
     try {
-       await Url.findByIdAndUpdate(id, {origin});
+        const url = await Url.findById(id);
+        if(!url.user.equals(req.user.id)){
+            throw new Error("No tienes permisos para editar esta url");
+        }
+
+        await Url.updateOne({origin});
+        req.flash("mensajes", [{msg: "Url editada"}]);
+       //await Url.findByIdAndUpdate(id, {origin});
        res.redirect("/");
     } catch (error) {
-        console.log("Hubo un error");
-        res.send("Hubo un error al editar la url");
+        req.flash("mensajes", [{msg: error.message}]);
+        return res.redirect("/");
     }
 }
 
@@ -72,8 +89,8 @@ const redireccionamiento = async(req, res) =>{
      console.log(urlDB.origin);
      res.redirect(urlDB.origin);
    } catch (error) {
-       console.log("Hubo un error");
-       res.send("Hubo un error al redireccionar");  
+    req.flash("mensajes", [{msg: "Error al redireccionar la url"}]);
+    return res.redirect("/auth/login");
    }
 }
 

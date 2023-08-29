@@ -28,8 +28,9 @@
               </div>
 
               <div class="form-outline form-white mb-4">
-                <input type="password" id="typePasswordX" class="form-control form-control-lg" />
+                <input type="password" id="typePasswordX" class="form-control form-control-lg" name="password2"/>
                 <label class="form-label" for="typePasswordX">Repeat Password</label>
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
               </div>
 
               <p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#!">Forgot password?</a></p>

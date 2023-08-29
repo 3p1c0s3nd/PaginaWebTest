@@ -1,3 +1,4 @@
+<form action="/auth/login" method="post">
 <section class="vh-300 gradient-custom">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -11,13 +12,14 @@
               <p class="text-white-50 mb-5">Please enter your login and password!</p>
 
               <div class="form-outline form-white mb-4">
-                <input type="email" id="typeEmailX" class="form-control form-control-lg" />
+                <input type="email" id="typeEmailX" class="form-control form-control-lg" name="email"/>
                 <label class="form-label" for="typeEmailX">Email</label>
               </div>
 
               <div class="form-outline form-white mb-4">
-                <input type="password" id="typePasswordX" class="form-control form-control-lg" />
+                <input type="password" id="typePasswordX" class="form-control form-control-lg" name="password"/>
                 <label class="form-label" for="typePasswordX">Password</label>
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
               </div>
 
               <p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#!">Forgot password?</a></p>
@@ -43,3 +45,4 @@
     </div>
   </div>
 </section>
+</form>
